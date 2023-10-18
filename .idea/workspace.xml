@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="jlox:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="28a62952-b946-4c80-ac6d-64d423b6cb8a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/jlox_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/exceptions/InterpreterError.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/exceptions/ParserError.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Expr.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/ExprVisitor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Interpreter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Lox.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Parser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Scanner.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Token.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/TokenType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/test/AstPrinter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/tool/GenerateAst.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/icu/buzz/SimpleTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="D:/apache-maven-3.8.6" />
+        <option name="userSettingsFile" value="D:\apache-maven-3.8.6\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="downloadSourcesAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2WLPud7PGvTsXOWLwRe0kVVDtbo" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "E:/java_tmp",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settings.ide.settings.new.ui",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="icu.buzz.lox" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Lox">
+    <configuration name="GererateAst" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="icu.buzz.tool.GenerateAst" />
+      <module name="jlox" />
+      <option name="PROGRAM_PARAMETERS" value="E:\lox" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="icu.buzz.tool.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Lox" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true" show_console_on_std_out="true">
+      <option name="MAIN_CLASS_NAME" value="icu.buzz.lox.Lox" />
+      <module name="jlox" />
+      <option name="PROGRAM_PARAMETERS" value="E:\lox\test.lox" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="icu.buzz.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SimpleTest.astPrint" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="jlox" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="icu.buzz.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="icu.buzz" />
+      <option name="MAIN_CLASS_NAME" value="icu.buzz.SimpleTest" />
+      <option name="METHOD_NAME" value="astPrint" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SimpleTest.methodRef" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="jlox" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="icu.buzz.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="icu.buzz" />
+      <option name="MAIN_CLASS_NAME" value="icu.buzz.SimpleTest" />
+      <option name="METHOD_NAME" value="methodRef" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SimpleTest.nested_class" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="jlox" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="icu.buzz.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="icu.buzz" />
+      <option name="MAIN_CLASS_NAME" value="icu.buzz.SimpleTest" />
+      <option name="METHOD_NAME" value="nested_class" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SimpleTest.visitorTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="jlox" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="icu.buzz.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="icu.buzz" />
+      <option name="MAIN_CLASS_NAME" value="icu.buzz.SimpleTest" />
+      <option name="METHOD_NAME" value="visitorTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.GererateAst" />
+      <item itemvalue="Application.Lox" />
+      <item itemvalue="JUnit.SimpleTest.astPrint" />
+      <item itemvalue="JUnit.SimpleTest.methodRef" />
+      <item itemvalue="JUnit.SimpleTest.nested_class" />
+      <item itemvalue="JUnit.SimpleTest.visitorTest" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Lox" />
+        <item itemvalue="JUnit.SimpleTest.astPrint" />
+        <item itemvalue="JUnit.SimpleTest.methodRef" />
+        <item itemvalue="JUnit.SimpleTest.visitorTest" />
+        <item itemvalue="JUnit.SimpleTest.nested_class" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="28a62952-b946-4c80-ac6d-64d423b6cb8a" name="Changes" comment="" />
+      <created>1696509111794</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1696509111794</updated>
+      <workItem from="1696509113711" duration="891000" />
+      <workItem from="1696510018690" duration="66712000" />
+      <workItem from="1697549943354" duration="22118000" />
+      <workItem from="1697640442268" duration="126000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="executable:docker" />
+    <option featureType="dependencySupport" implementationName="executable:kubectl" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
