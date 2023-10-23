@@ -1,5 +1,8 @@
 package icu.buzz.lox;
 
+import icu.buzz.lox.token.Token;
+import icu.buzz.lox.token.TokenType;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

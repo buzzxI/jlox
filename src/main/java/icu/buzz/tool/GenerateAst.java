@@ -13,13 +13,20 @@ public class GenerateAst {
             System.out.println("Usage: java -jar GenerateAst.jar [output_directory]");
             System.exit(64);
         }
-        List<String> classes = defineAst(args[0], "Expr",
+        List<String> expressions = defineAst(args[0], "Expr",
                 Arrays.asList("Binary: Expr left, Token operator, Expr right",
                         "Unary: Token operator, Expr right",
                         "Grouping: Expr expression",
-                        "Literal: Object value"));
-        defineVisitor(args[0], "Expr", classes);
-        defineVisitor(args[0], "Stmt", classes);
+                        "Literal: Object value",
+                        "Variable: Token name"),
+                "icu.buzz.lox.token.Token");
+        defineVisitor(args[0], "Expr", expressions);
+        List<String> statements = defineAst(args[0], "Stmt",
+                Arrays.asList("Expression: Expr expr",
+                        "Print: Expr expr",
+                        "Var: Token name, Expr initializer"),
+                "icu.buzz.lox.expr.Expr", "icu.buzz.lox.token.Token");
+        defineVisitor(args[0], "Stmt", statements);
     }
 
     /**
@@ -29,15 +36,18 @@ public class GenerateAst {
      * @param target target file name
      * @param types specify inner static classes
      */
-    public static List<String> defineAst(String dir, String target, List<String> types) {
+    public static List<String> defineAst(String dir, String target, List<String> types, String ... imports) {
         String full_path = dir + "/" + target + ".java";
         List<String> classes = null;
 
         try (PrintWriter writer = new PrintWriter(full_path, StandardCharsets.UTF_8)) {
-            writer.println("package icu.buzz.lox;");
+            writer.println("package icu.buzz.lox." + target.toLowerCase() + ";");
             writer.println();
-            writer.println("public abstract class " + target + " {");
+            // extra import
+            for (String s : imports) writer.println("import " + s + ";");
+            writer.println();
 
+            writer.println("public abstract class " + target + " {");
             classes = new ArrayList<>(types.size());
             List<String> fields = new ArrayList<>(types.size());
             for (String type : types) {
@@ -115,10 +125,10 @@ public class GenerateAst {
     private static void defineVisitor(String dir, String base, List<String> classes) {
         String full_path = dir + "/" + base + "Visitor.java";
         try (PrintWriter writer = new PrintWriter(full_path, StandardCharsets.UTF_8)) {
-            writer.println("package icu.buzz.lox;");
+            writer.println("package icu.buzz.lox." + base.toLowerCase() + ";");
             writer.println();
             writer.println("public interface " + base + "Visitor<R> {");
-            for (String method : classes) writer.println("    R visit" + base + " (" + base + "." + method + " expr);");
+            for (String method : classes) writer.println("    R visit" + base + " (" + base + "." + method + " " + base.toLowerCase() + ");");
             writer.println("}");
         } catch (IOException e) {
             System.out.println("writer opens: " + full_path + " fail");

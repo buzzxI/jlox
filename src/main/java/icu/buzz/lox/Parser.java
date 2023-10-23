@@ -1,7 +1,12 @@
 package icu.buzz.lox;
 
+import java.util.ArrayList;
 import java.util.List;
 import icu.buzz.exceptions.ParserError;
+import icu.buzz.lox.expr.Expr;
+import icu.buzz.lox.stmt.Stmt;
+import icu.buzz.lox.token.Token;
+import icu.buzz.lox.token.TokenType;
 
 public class Parser {
     private final List<Token> tokenList;
@@ -12,14 +17,50 @@ public class Parser {
         this.current = 0;
     }
 
-    public Expr parseExpr() {
-        try {
-           return expression();
-        } catch (ParserError error) {
-            return null;
+    public List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!isEnd()) {
+            try {
+                statements.add(declaration());
+            } catch (ParserError error) {
+                Lox.errorReport(error.getToken(), error.getMessage());
+                synchronize();
+            }
         }
+        return statements;
     }
 
+    private Stmt declaration() {
+        if (match(TokenType.VAR)) return varDecl();
+        return statement();
+    }
+
+    private Stmt varDecl() {
+        Token name = consume(TokenType.IDENTIFIER, "a identifier is needed for 'var'");
+        Expr initializer = null;
+
+        if (match(TokenType.EQUAL)) initializer = expression();
+
+        consume(TokenType.SEMICOLON, "a ';' is needed at the end of a statement");
+        return new Stmt.Var(name, initializer);
+    }
+
+    private Stmt statement() {
+        if (match(TokenType.PRINT)) return printStmt();
+        return exprStmt();
+    }
+
+    private Stmt printStmt() {
+        Expr expr = expression();
+        consume(TokenType.SEMICOLON, "a ';' is needed at the end of the statement");
+        return new Stmt.Print(expr);
+    }
+
+    private Stmt exprStmt() {
+        Expr expr = expression();
+        consume(TokenType.SEMICOLON, "a ';' is needed at the end of the statement");
+        return new Stmt.Expression(expr);
+    }
 
     private Expr expression() {
         return equality();
@@ -86,7 +127,8 @@ public class Parser {
                 consume(TokenType.RIGHT_PAREN, "a ')' is expected");
                 yield new Expr.Grouping(expr);
             }
-            default -> throw reportAndRaiseParserError(peek(), "unexpected token");
+            case IDENTIFIER -> new Expr.Variable(currenToken);
+            default -> throw new ParserError(peek(), "unexpected token");
         };
     }
 
@@ -130,19 +172,7 @@ public class Parser {
      */
     private Token consume(TokenType type, String errorMessage) {
         if (check(type)) return advance();
-
-        throw reportAndRaiseParserError(peek(), errorMessage);
-    }
-
-    /**
-     * report an error and throws an exception
-     * @param token token (maybe) with error
-     * @param message error message
-     * @return parse error
-     */
-    private ParserError reportAndRaiseParserError(Token token, String message) {
-        Lox.errorReport(token, message);
-        return new ParserError(message);
+        else throw new ParserError(peek(), errorMessage);
     }
 
     /**

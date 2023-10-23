@@ -1,4 +1,6 @@
-package icu.buzz.lox;
+package icu.buzz.lox.expr;
+
+import icu.buzz.lox.token.Token;
 
 public abstract class Expr {
     public abstract <R> R accept(ExprVisitor<R> visitor);
@@ -96,6 +98,25 @@ public abstract class Expr {
         // getters
         public Object getValue() {
             return this.value;
+        }
+
+    }
+
+    public static class Variable extends Expr {
+        private final Token name;
+
+        public Variable(Token name) {
+            this.name = name;
+        }
+
+        @Override
+        public <R> R accept(ExprVisitor<R> visitor) {
+            return visitor.visitExpr(this);
+        }
+
+        // getters
+        public Token getName() {
+            return this.name;
         }
 
     }

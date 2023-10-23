@@ -1,7 +1,7 @@
 package icu.buzz.test;
 
-import icu.buzz.lox.Expr;
-import icu.buzz.lox.ExprVisitor;
+import icu.buzz.lox.expr.Expr;
+import icu.buzz.lox.expr.ExprVisitor;
 
 /**
  * a class to test AST correctness, it acts like anti-parser
@@ -50,5 +50,10 @@ public class AstPrinter implements ExprVisitor<String> {
     public String visitExpr(Expr.Literal expr) {
         if (expr.getValue() == null) return "nil";
         return expr.getValue().toString();
+    }
+
+    @Override
+    public String visitExpr(Expr.Variable expr) {
+        return expr.getName().getLexeme();
     }
 }

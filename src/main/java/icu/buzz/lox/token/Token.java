@@ -1,4 +1,4 @@
-package icu.buzz.lox;
+package icu.buzz.lox.token;
 
 public class Token {
     // token name
@@ -12,7 +12,7 @@ public class Token {
      * inner class LocationInfo
      * this class is used to record token position
      */
-    static class LocationInfo {
+    public static class LocationInfo {
         // line number in source code
         private final int line;
         // column number in source code (offset is measured in characters not tokens)

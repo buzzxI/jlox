@@ -1,16 +1,30 @@
 package icu.buzz.lox;
 
-import icu.buzz.exceptions.InterpreterError;
+import icu.buzz.exceptions.ExecuteError;
+import icu.buzz.lox.expr.Expr;
+import icu.buzz.lox.expr.ExprVisitor;
+import icu.buzz.lox.stmt.Stmt;
+import icu.buzz.lox.stmt.StmtVisitor;
+import icu.buzz.lox.token.Token;
 
-public class Interpreter implements ExprVisitor<Object> {
-    private final Expr expr;
+import java.util.List;
 
-    public Interpreter(Expr expr) {
-        this.expr = expr;
+public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
+    private final Environment environment;
+
+    private final List<Stmt> statements;
+
+    public Interpreter(List<Stmt> statements) {
+        this.environment = new Environment();
+        this.statements = statements;
     }
 
-    public Object interpret() {
-        return expr.accept(this);
+    public void interpret() {
+        try {
+            statements.forEach(stmt -> stmt.accept(this));
+        } catch (ExecuteError error) {
+            Lox.errorReport(error.getToken(), error.getMessage());
+        }
     }
 
     @Override
@@ -31,12 +45,12 @@ public class Interpreter implements ExprVisitor<Object> {
             case SLASH -> {
                 checkNumber(token, "Operands for '/' should be number", left, right);
                 if ((double)right != 0) yield (double)left / (double)right;
-                throw new InterpreterError(token, "Divisor should not be zero");
+                throw new ExecuteError(token, "Divisor should not be zero");
             }
             case PLUS -> {
                 if (isNumber(left, right)) yield (double)left + (double)right;
-                if (isString(left, right)) yield left + (String)right;
-                throw new InterpreterError(token, "Operands for '+' should be number or string");
+                if (isString(left, right)) yield (String)left + (String)right;
+                throw new ExecuteError(token, "Operands for '+' should be number or string");
             }
             case GREATER -> {
                 checkNumber(token, "Operands for '>' should be number", left, right);
@@ -57,7 +71,7 @@ public class Interpreter implements ExprVisitor<Object> {
             case EQUAL -> isEqual(left, right);
             case BANG_EQUAL -> !isEqual(left, right);
             // never reach
-            default -> throw new InterpreterError(token, "Unexpected binary operator");
+            default -> throw new ExecuteError(token, "Unexpected binary operator");
         };
     }
 
@@ -72,7 +86,7 @@ public class Interpreter implements ExprVisitor<Object> {
             }
             case BANG -> !isTruthy(right);
             // never reach
-            default -> throw new InterpreterError(token, "Unexpected unary operator");
+            default -> throw new ExecuteError(token, "Unexpected unary operator");
         };
     }
 
@@ -84,6 +98,11 @@ public class Interpreter implements ExprVisitor<Object> {
     @Override
     public Object visitExpr(Expr.Literal expr) {
         return expr.getValue();
+    }
+
+    @Override
+    public Object visitExpr(Expr.Variable expr) {
+        return environment.get(expr.getName());
     }
 
     /**
@@ -126,7 +145,7 @@ public class Interpreter implements ExprVisitor<Object> {
      */
     private boolean isEqual(Object arg1, Object arg2) {
         if (arg1 == null && arg2 == null) return true;
-        if (arg1 == null || arg2 == null) return false;
+        if (arg1 == null) return false;
         return arg1.equals(arg2);
     }
 
@@ -137,6 +156,47 @@ public class Interpreter implements ExprVisitor<Object> {
      * @param obj args for @method: isNumber
      */
     private void checkNumber(Token token, String message, Object ... obj) {
-        if (!isNumber(obj)) throw new InterpreterError(token, message);
+        if (!isNumber(obj)) throw new ExecuteError(token, message);
+    }
+
+    @Override
+    public Void visitStmt(Stmt.Expression stmt) {
+        stmt.getExpr().accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visitStmt(Stmt.Print stmt) {
+        System.out.println(stringify(stmt.getExpr().accept(this)));
+        return null;
+    }
+
+    @Override
+    public Void visitStmt(Stmt.Var stmt) {
+        Object rst = null;
+
+        Expr initializer = stmt.getInitializer();
+        if (initializer != null) rst = initializer.accept(this);
+
+        environment.define(stmt.getName().getLexeme(), rst);
+        return null;
+    }
+
+    /**
+     * stringify all kinds of lox object
+     * @param loxObj lox object
+     * @return string
+     */
+    private String stringify(Object loxObj) {
+        if (loxObj == null) return "nil";
+
+        // when lox object is a number, lox should know if this is integer or double
+        if (loxObj instanceof Double) {
+            String rst = loxObj.toString();
+            if (rst.endsWith(".0")) return rst.substring(0, rst.length() - 2);
+            return rst;
+        }
+
+        return loxObj.toString();
     }
 }

@@ -1,7 +1,8 @@
 package icu.buzz.lox;
 
-import icu.buzz.exceptions.InterpreterError;
-import icu.buzz.test.AstPrinter;
+import icu.buzz.lox.stmt.Stmt;
+import icu.buzz.lox.token.Token;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -27,6 +28,7 @@ public class Lox {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         for (;;) {
             System.out.print(">");
+            System.out.flush();
             String script = reader.readLine();
             // user types Ctrl + D => EOF, command line terminates
             if (script == null) break;
@@ -40,18 +42,14 @@ public class Lox {
     private static void runLox(String source) {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
-        System.out.println(tokens);
         if (hasError) System.exit(65);
         Parser parser = new Parser(tokens);
-        Expr expr = parser.parseExpr();
+        List<Stmt> statements = parser.parse();
         if (hasError) System.exit(65);
-        Interpreter interpreter = new Interpreter(expr);
-        try {
-            System.out.println(interpreter.interpret());
-        } catch (InterpreterError e) {
-            System.err.println("Running lox script error:" + e.getMessage());
-        }
+        Interpreter interpreter = new Interpreter(statements);
+        interpreter.interpret();
     }
+
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
             System.err.println("Usage: java Lox [script file]");

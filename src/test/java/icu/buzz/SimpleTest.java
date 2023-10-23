@@ -1,9 +1,9 @@
 package icu.buzz;
 
 import icu.buzz.test.AstPrinter;
-import icu.buzz.lox.Expr;
-import icu.buzz.lox.Token;
-import icu.buzz.lox.TokenType;
+import icu.buzz.lox.expr.Expr;
+import icu.buzz.lox.token.Token;
+import icu.buzz.lox.token.TokenType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -65,6 +65,12 @@ public class SimpleTest {
         ExtentB b = new ExtentB();
         a.accept(operation);
         b.accept(operation);
+    }
+
+    @Test
+    public void notANumberTest() {
+        Double num = 0.0;
+        System.out.println(num / num);
     }
 
     @Test

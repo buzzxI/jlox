@@ -1,4 +1,4 @@
-package icu.buzz.lox;
+package icu.buzz.lox.token;
 
 public enum TokenType {
     /**

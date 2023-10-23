@@ -2,11 +2,10 @@ package icu.buzz.exceptions;
 
 import icu.buzz.lox.token.Token;
 
-public class ParserError extends RuntimeException {
-
+public class ExecuteError extends RuntimeException {
     private final Token token;
 
-    public ParserError(Token token, String message) {
+    public ExecuteError(Token token, String message) {
         super(message);
         this.token = token;
     }
