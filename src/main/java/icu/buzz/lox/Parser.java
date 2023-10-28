@@ -1,8 +1,9 @@
 package icu.buzz.lox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import icu.buzz.exceptions.ParserError;
+import icu.buzz.lox.exceptions.ParserError;
 import icu.buzz.lox.expr.Expr;
 import icu.buzz.lox.stmt.Stmt;
 import icu.buzz.lox.token.Token;
@@ -32,6 +33,7 @@ public class Parser {
 
     private Stmt declaration() {
         if (match(TokenType.VAR)) return varDecl();
+        if (match(TokenType.FUN)) return funDecl();
         return statement();
     }
 
@@ -45,8 +47,34 @@ public class Parser {
         return new Stmt.Var(name, initializer);
     }
 
+    private Stmt funDecl() {
+        Token funName = consume(TokenType.IDENTIFIER, "the name of a function should be an identifier");
+        consume(TokenType.LEFT_PAREN, "a '(' is needed at the beginning of function parameter list");
+        List<Token> parameters = new ArrayList<>();
+        if (!check(TokenType.RIGHT_PAREN)) {
+            do {
+                if (parameters.size() >= Lox.MAX_ARGS) {
+                    Lox.errorReport(peek(), "cannot have more than 255 parameters in a function declaration");
+                }
+                Token parameter = consume(TokenType.IDENTIFIER, "expect parameter name");
+                parameters.add(parameter);
+            } while (match(TokenType.COMMA));
+        }
+        consume(TokenType.RIGHT_PAREN, "a ')' is needed at the end of function parameter list");
+
+        Stmt stmt = statement();
+        if (!(stmt instanceof Stmt.Block body)) throw new ParserError(previous(), "body of a function should be a block");
+
+        return new Stmt.Fun(funName, parameters, body.getStatements());
+    }
+
     private Stmt statement() {
         if (match(TokenType.PRINT)) return printStmt();
+        if (match(TokenType.LEFT_BRACE)) return blockStmt();
+        if (match(TokenType.IF)) return ifStmt();
+        if (match(TokenType.WHILE)) return whileStmt();
+        if (match(TokenType.FOR)) return forStmt();
+        if (match(TokenType.RETURN)) return retStmt();
         return exprStmt();
     }
 
@@ -56,6 +84,72 @@ public class Parser {
         return new Stmt.Print(expr);
     }
 
+    private Stmt blockStmt() {
+        List<Stmt> stmts = new ArrayList<>();
+        while (!check(TokenType.RIGHT_BRACE) && !isEnd()) stmts.add(declaration());
+        consume(TokenType.RIGHT_BRACE, "a '}' is needed at the end of the block");
+        return new Stmt.Block(stmts);
+    }
+
+    private Stmt ifStmt() {
+        consume(TokenType.LEFT_PAREN, "a '(' is needed at the begin of 'if' condition");
+        Expr condition = expression();
+        consume(TokenType.RIGHT_PAREN, "a ')' is needed at the end of 'if' condition");
+        Stmt thenBranch = statement();
+        Stmt elseBranch = null;
+        if (match(TokenType.ELSE)) elseBranch = statement();
+        return new Stmt.If(condition, thenBranch, elseBranch);
+    }
+
+    private Stmt whileStmt() {
+        consume(TokenType.LEFT_PAREN, "a '(' is needed at the begin of 'while' condition");
+        Expr condition = expression();
+        consume(TokenType.RIGHT_PAREN, "a ')' is needed at the end of 'while' condition");
+        Stmt body = statement();
+        return new Stmt.While(condition, body);
+    }
+
+    private Stmt forStmt() {
+        consume(TokenType.LEFT_PAREN, "a '(' is needed at the begin of 'for'");
+        Stmt initializer = null;
+
+        if (match(TokenType.VAR)) {
+            initializer = varDecl();
+        } else if (!match(TokenType.SEMICOLON)) {
+            initializer = exprStmt();
+        }
+
+        Expr condition = null;
+        if (!match(TokenType.SEMICOLON)) {
+            condition = expression();
+        }
+        consume(TokenType.SEMICOLON, "a ';' is needed after condition");
+
+        Expr increment = null;
+        if (!match(TokenType.RIGHT_PAREN)) {
+            increment = expression();
+        }
+        consume(TokenType.RIGHT_PAREN, "a ')' is needed at the end of 'for'");
+
+        Stmt body = statement();
+        if (increment != null) body = new Stmt.Block(Arrays.asList(body, new Stmt.Expression(increment)));
+
+        if (condition == null) condition = new Expr.Literal(true);
+        body = new Stmt.While(condition, body);
+
+        if (initializer != null) body = new Stmt.Block(Arrays.asList(initializer, body));
+
+        return body;
+    }
+
+    private Stmt retStmt() {
+        Token keyword = previous();
+        Expr value = null;
+        if (!check(TokenType.SEMICOLON)) value = expression();
+        consume(TokenType.SEMICOLON, "a ';' is needed at the end of return");
+        return new Stmt.Return(keyword, value);
+    }
+
     private Stmt exprStmt() {
         Expr expr = expression();
         consume(TokenType.SEMICOLON, "a ';' is needed at the end of the statement");
@@ -63,12 +157,43 @@ public class Parser {
     }
 
     private Expr expression() {
-        return equality();
+        return assignment();
+    }
+
+    private Expr assignment() {
+        Expr expr = or();
+
+        if (match(TokenType.EQUAL)) {
+            Token equalToken = previous();
+            if (expr instanceof Expr.Variable) return new Expr.Assign(((Expr.Variable) expr).getName(), assignment());
+            throw new ParserError(equalToken, "expr for '=' must be an identifier");
+        }
+
+        return expr;
+    }
+
+    private Expr or() {
+        Expr expr = and();
+        while (match(TokenType.OR)) {
+           Token operator = previous();
+           expr = new Expr.Logical(expr, operator, and());
+        }
+
+        return expr;
+    }
+
+    private Expr and() {
+        Expr expr = equality();
+        while (match(TokenType.AND)) {
+            Token operator = previous();
+            expr = new Expr.Logical(expr, operator, equality());
+        }
+        return expr;
     }
 
     private Expr equality() {
         Expr expr = comparison();
-        while (match(TokenType.EQUAL, TokenType.BANG_EQUAL)) {
+        while (match(TokenType.EQUAL_EQUAL, TokenType.BANG_EQUAL)) {
             Token operator = previous();
             Expr right = comparison();
             expr = new Expr.Binary(expr, operator, right);
@@ -111,7 +236,33 @@ public class Parser {
             Token operator = previous();
             return new Expr.Unary(operator, unary());
         }
-        return primary();
+        return call();
+    }
+
+    private Expr call() {
+       Expr expr = primary();
+       while (true) {
+           if (match(TokenType.LEFT_PAREN)) {
+              expr = finishCall(expr);
+           } else{
+               break;
+           }
+       }
+       return expr;
+    }
+
+    private Expr finishCall(Expr callee) {
+        List<Expr> arguments = new ArrayList<>();
+        if (!check(TokenType.RIGHT_PAREN)) {
+            do {
+                if (arguments.size() >= Lox.MAX_ARGS) {
+                    Lox.errorReport(peek(), "cannot have more than 255 arguments in a function call");
+                }
+                arguments.add(expression());
+            } while (match(TokenType.COMMA));
+        }
+        Token paren = consume(TokenType.RIGHT_PAREN, "a ')' is needed at the end of a function call");
+        return new Expr.Call(callee, arguments, paren);
     }
 
     private Expr primary() {
@@ -128,7 +279,7 @@ public class Parser {
                 yield new Expr.Grouping(expr);
             }
             case IDENTIFIER -> new Expr.Variable(currenToken);
-            default -> throw new ParserError(peek(), "unexpected token");
+            default -> throw new ParserError(currenToken, "unexpected token '" + currenToken.getLexeme() + "'");
         };
     }
 

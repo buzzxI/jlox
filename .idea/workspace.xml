@@ -10,20 +10,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28a62952-b946-4c80-ac6d-64d423b6cb8a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Environment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/stmt/Stmt.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/stmt/StmtVisitor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/callable/LoxCallable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/callable/LoxFunction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/callable/foreign/Clock.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/exceptions/Return.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/exceptions/InterpreterError.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/exceptions/ExecuteError.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/exceptions/ParserError.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/exceptions/ParserError.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Expr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/expr/Expr.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/ExprVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/expr/ExprVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/exceptions/ExecuteError.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/exceptions/ExecuteError.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/exceptions/ParserError.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/exceptions/ParserError.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Environment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Interpreter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Interpreter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Lox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Lox.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Scanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Scanner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/token/Token.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/TokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/token/TokenType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/expr/Expr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/expr/Expr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/expr/ExprVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/expr/ExprVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/stmt/Stmt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/stmt/Stmt.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/stmt/StmtVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/stmt/StmtVisitor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/test/AstPrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/test/AstPrinter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/tool/GenerateAst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/tool/GenerateAst.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/icu/buzz/SimpleTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/icu/buzz/SimpleTest.java" afterDir="false" />
@@ -132,6 +134,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="SimpleTest.SingleTon" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="jlox" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="icu.buzz.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="icu.buzz" />
+      <option name="MAIN_CLASS_NAME" value="icu.buzz.SimpleTest" />
+      <option name="METHOD_NAME" value="SingleTon" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="SimpleTest.astPrint" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="jlox" />
       <extension name="coverage">
@@ -180,37 +198,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SimpleTest.visitorTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="jlox" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="icu.buzz.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="icu.buzz" />
-      <option name="MAIN_CLASS_NAME" value="icu.buzz.SimpleTest" />
-      <option name="METHOD_NAME" value="visitorTest" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <list>
       <item itemvalue="Application.GererateAst" />
       <item itemvalue="Application.Lox" />
+      <item itemvalue="JUnit.SimpleTest.SingleTon" />
       <item itemvalue="JUnit.SimpleTest.notANumberTest" />
       <item itemvalue="JUnit.SimpleTest.astPrint" />
       <item itemvalue="JUnit.SimpleTest.methodRef" />
-      <item itemvalue="JUnit.SimpleTest.visitorTest" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Lox" />
+        <item itemvalue="JUnit.SimpleTest.SingleTon" />
         <item itemvalue="JUnit.SimpleTest.notANumberTest" />
         <item itemvalue="JUnit.SimpleTest.astPrint" />
         <item itemvalue="JUnit.SimpleTest.methodRef" />
-        <item itemvalue="JUnit.SimpleTest.visitorTest" />
       </list>
     </recent_temporary>
   </component>
@@ -225,7 +227,9 @@
       <workItem from="1696509113711" duration="891000" />
       <workItem from="1696510018690" duration="66712000" />
       <workItem from="1697549943354" duration="22118000" />
-      <workItem from="1697640442268" duration="25119000" />
+      <workItem from="1697640442268" duration="36621000" />
+      <workItem from="1698326074513" duration="21400000" />
+      <workItem from="1698474666505" duration="16641000" />
     </task>
     <servers />
   </component>
@@ -249,6 +253,16 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="this.tokenList.get(current)" language="JAVA" />
+        <watch expression="stmt.getStatements()" language="JAVA" />
+        <watch expression="name.getLexeme()" language="JAVA" />
+        <watch expression="((Call)((Expression)statements.get(0)).expr).paren" custom="icu.buzz.lox.stmt.Stmt.Expression,icu.buzz.lox.expr.Expr.Call" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

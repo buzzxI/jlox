@@ -12,6 +12,8 @@ import java.util.List;
 public class Lox {
     private static boolean hasError = false;
 
+    public static final int MAX_ARGS = 255;
+
     /**
      * parse lox source file from path @param: path
      */

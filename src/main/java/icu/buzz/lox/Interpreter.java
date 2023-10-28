@@ -1,21 +1,30 @@
 package icu.buzz.lox;
 
-import icu.buzz.exceptions.ExecuteError;
+import icu.buzz.lox.callable.LoxCallable;
+import icu.buzz.lox.callable.LoxFunction;
+import icu.buzz.lox.exceptions.ExecuteError;
+import icu.buzz.lox.exceptions.Return;
 import icu.buzz.lox.expr.Expr;
 import icu.buzz.lox.expr.ExprVisitor;
+import icu.buzz.lox.callable.foreign.Clock;
 import icu.buzz.lox.stmt.Stmt;
 import icu.buzz.lox.stmt.StmtVisitor;
 import icu.buzz.lox.token.Token;
+import icu.buzz.lox.token.TokenType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
-    private final Environment environment;
+    private final Environment global;
+    private Environment environment;
 
     private final List<Stmt> statements;
 
     public Interpreter(List<Stmt> statements) {
-        this.environment = new Environment();
+        this.global = new Environment();
+        global.define("clock", new Clock());
+        this.environment = global;
         this.statements = statements;
     }
 
@@ -25,6 +34,25 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
         } catch (ExecuteError error) {
             Lox.errorReport(error.getToken(), error.getMessage());
         }
+    }
+
+    @Override
+    public Object visitExpr(Expr.Assign expr) {
+        Object value = expr.getValue().accept(this);
+        environment.assign(expr.getName(), value);
+        return value;
+    }
+
+    @Override
+    public Object visitExpr(Expr.Logical expr) {
+        Token operator = expr.getOperator();
+        Object left = expr.getLeft().accept(this);
+        if (operator.getType() == TokenType.OR) {
+            if (isTruthy(left)) return left;
+        } else {
+            if (!isTruthy(left)) return left;
+        }
+        return expr.getRight().accept(this);
     }
 
     @Override
@@ -49,7 +77,7 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
             }
             case PLUS -> {
                 if (isNumber(left, right)) yield (double)left + (double)right;
-                if (isString(left, right)) yield (String)left + (String)right;
+                if (isString(left, right)) yield left + (String)right;
                 throw new ExecuteError(token, "Operands for '+' should be number or string");
             }
             case GREATER -> {
@@ -88,6 +116,20 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
             // never reach
             default -> throw new ExecuteError(token, "Unexpected unary operator");
         };
+    }
+
+    @Override
+    public Object visitExpr(Expr.Call expr) {
+        Object callee = expr.getCallee().accept(this);
+        List<Expr> argLists = expr.getArguments();
+        int size = Math.min(argLists.size(), Lox.MAX_ARGS);
+        List<Object> arguments = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) arguments.add(argLists.get(i).accept(this));
+
+        if (!(callee instanceof LoxCallable function)) throw new ExecuteError(expr.getParen(), "only call functions and classes");
+        if (function.arity() != arguments.size()) throw new ExecuteError(expr.getParen(), "function except:" + function.arity()+ " but got:" + arguments.size());
+
+        return function.call(this, arguments);
     }
 
     @Override
@@ -172,6 +214,47 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
     }
 
     @Override
+    public Void visitStmt(Stmt.Block stmt) {
+        executeBlock(stmt.getStatements(), new Environment(this.environment));
+        return null;
+    }
+
+    public void executeBlock(List<Stmt> statements, Environment environment) {
+        Environment previous = this.environment;
+        this.environment = environment;
+        try {
+            statements.forEach(s -> s.accept(this));
+        } finally {
+            this.environment = previous;
+        }
+    }
+
+    @Override
+    public Void visitStmt(Stmt.If stmt) {
+        if (isTruthy(stmt.getCondition().accept(this))) {
+            stmt.getThenBranch().accept(this);
+        } else if (stmt.getElseBranch() != null) {
+            stmt.getElseBranch().accept(this);
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitStmt(Stmt.While stmt) {
+        Expr condition = stmt.getCondition();
+        Stmt body = stmt.getBody();
+        while (isTruthy(condition.accept(this))) body.accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visitStmt(Stmt.Return stmt) {
+        Object value = null;
+        if (stmt.getValue() != null) value = stmt.getValue().accept(this);
+        throw new Return(value);
+    }
+
+    @Override
     public Void visitStmt(Stmt.Var stmt) {
         Object rst = null;
 
@@ -179,6 +262,13 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
         if (initializer != null) rst = initializer.accept(this);
 
         environment.define(stmt.getName().getLexeme(), rst);
+        return null;
+    }
+
+
+    @Override
+    public Void visitStmt(Stmt.Fun stmt) {
+        this.environment.define(stmt.getName().getLexeme(), new LoxFunction(stmt, this.environment));
         return null;
     }
 

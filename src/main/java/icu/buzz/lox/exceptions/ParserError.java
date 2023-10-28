@@ -1,4 +1,4 @@
-package icu.buzz.exceptions;
+package icu.buzz.lox.exceptions;
 
 import icu.buzz.lox.token.Token;
 

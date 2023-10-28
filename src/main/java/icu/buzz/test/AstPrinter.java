@@ -32,6 +32,16 @@ public class AstPrinter implements ExprVisitor<String> {
     }
 
     @Override
+    public String visitExpr(Expr.Assign expr) {
+        return null;
+    }
+
+    @Override
+    public String visitExpr(Expr.Logical expr) {
+        return null;
+    }
+
+    @Override
     public String visitExpr(Expr.Binary expr) {
         return parenthesize(expr.getOperator().getLexeme(), expr.getLeft(), expr.getRight());
     }
@@ -39,6 +49,11 @@ public class AstPrinter implements ExprVisitor<String> {
     @Override
     public String visitExpr(Expr.Unary expr) {
         return parenthesize(expr.getOperator().getLexeme(), expr.getRight());
+    }
+
+    @Override
+    public String visitExpr(Expr.Call expr) {
+        return null;
     }
 
     @Override
