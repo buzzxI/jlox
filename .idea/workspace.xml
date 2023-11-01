@@ -10,25 +10,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28a62952-b946-4c80-ac6d-64d423b6cb8a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/callable/LoxCallable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/callable/LoxFunction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/callable/foreign/Clock.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/exceptions/Return.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Resolver.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/exceptions/ResolverError.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/exceptions/ExecuteError.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/exceptions/ExecuteError.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/exceptions/ParserError.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/exceptions/ParserError.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Environment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Interpreter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Interpreter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Lox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Lox.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Parser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/expr/Expr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/expr/Expr.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/expr/ExprVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/expr/ExprVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/stmt/Stmt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/stmt/Stmt.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/stmt/StmtVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/stmt/StmtVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/test/AstPrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/test/AstPrinter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/tool/GenerateAst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/tool/GenerateAst.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/icu/buzz/SimpleTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/icu/buzz/SimpleTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,29 +65,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "E:/java_tmp",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.keymap",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/java_tmp&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="icu.buzz.lox.exceptions" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="icu.buzz.lox" />
     </key>
@@ -229,7 +219,8 @@
       <workItem from="1697549943354" duration="22118000" />
       <workItem from="1697640442268" duration="36621000" />
       <workItem from="1698326074513" duration="21400000" />
-      <workItem from="1698474666505" duration="17132000" />
+      <workItem from="1698474666505" duration="28434000" />
+      <workItem from="1698718353531" duration="16152000" />
     </task>
     <servers />
   </component>
@@ -255,6 +246,15 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/icu/buzz/lox/Lox.java</url>
+          <line>50</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="this.tokenList.get(current)" language="JAVA" />

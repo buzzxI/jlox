@@ -49,6 +49,9 @@ public class Lox {
         List<Stmt> statements = parser.parse();
         if (hasError) System.exit(65);
         Interpreter interpreter = new Interpreter(statements);
+        Resolver resolver = new Resolver(interpreter);
+        resolver.resolveSource(statements);
+        if (hasError) System.exit(65);
         interpreter.interpret();
     }
 

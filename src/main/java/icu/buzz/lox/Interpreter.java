@@ -13,15 +13,20 @@ import icu.buzz.lox.token.Token;
 import icu.buzz.lox.token.TokenType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
+    private final Map<Expr, Integer> depthMap;
+
     private final Environment global;
     private Environment environment;
 
     private final List<Stmt> statements;
 
     public Interpreter(List<Stmt> statements) {
+        this.depthMap = new HashMap<>();
         this.global = new Environment();
         global.define("clock", new Clock());
         this.environment = global;
@@ -39,7 +44,9 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
     @Override
     public Object visitExpr(Expr.Assign expr) {
         Object value = expr.getValue().accept(this);
-        environment.assign(expr.getName(), value);
+        Integer distance = depthMap.get(expr);
+        if (distance == null) global.assign(expr.getName(), value);
+        else environment.assign(expr.getName(), value, distance);
         return value;
     }
 
@@ -144,7 +151,9 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
     @Override
     public Object visitExpr(Expr.Variable expr) {
-        return environment.get(expr.getName());
+        Integer distance = depthMap.get(expr);
+        if (distance == null) return global.get(expr.getName());
+        else return environment.get(expr.getName(), distance);
     }
 
     /**
@@ -288,5 +297,14 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
         }
 
         return loxObj.toString();
+    }
+
+    /**
+     * mark expression with depth
+     * @param expr variable expression
+     * @param depth resolution depth
+     */
+    public void resolve(Expr expr, int depth) {
+        depthMap.put(expr, depth);
     }
 }
