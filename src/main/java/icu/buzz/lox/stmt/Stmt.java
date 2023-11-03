@@ -123,6 +123,32 @@ public abstract class Stmt {
 
     }
 
+    public static class Class extends Stmt {
+        private final Token name;
+
+        private final List<Stmt.Fun> methods;
+
+        public Class(Token name, List<Stmt.Fun> methods) {
+            this.name = name;
+            this.methods = methods;
+        }
+
+        @Override
+        public <R> R accept(StmtVisitor<R> visitor) {
+            return visitor.visitStmt(this);
+        }
+
+        // getters
+        public Token getName() {
+            return this.name;
+        }
+
+        public List<Stmt.Fun> getMethods() {
+            return this.methods;
+        }
+
+    }
+
     public static class Fun extends Stmt {
         private final Token name;
 

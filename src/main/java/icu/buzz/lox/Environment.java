@@ -43,6 +43,13 @@ public class Environment {
         return null;
     }
 
+    public Object get(String name, int distance) {
+        Environment environment = this;
+        for (; distance != 0 && environment != null; environment = environment.enclose, distance--);
+        if (environment != null) return environment.map.getOrDefault(name, null);
+        return null;
+    }
+
     public void assign(Token name, Object value) {
         if (map.containsKey(name.getLexeme())) map.put(name.getLexeme(), value);
         else throw new ExecuteError(name, "assign variable: " + name.getLexeme() + " has not been defined");

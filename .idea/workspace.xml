@@ -10,12 +10,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28a62952-b946-4c80-ac6d-64d423b6cb8a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Resolver.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/exceptions/ResolverError.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/oop/LoxClass.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/oop/LoxInstance.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Environment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Interpreter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Interpreter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Lox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Lox.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Parser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Parser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Resolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/Resolver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/callable/LoxFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/callable/LoxFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/expr/Expr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/expr/Expr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/expr/ExprVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/expr/ExprVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/stmt/Stmt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/stmt/Stmt.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/stmt/StmtVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/lox/stmt/StmtVisitor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/test/AstPrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/test/AstPrinter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/icu/buzz/tool/GenerateAst.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/icu/buzz/tool/GenerateAst.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -220,7 +229,7 @@
       <workItem from="1697640442268" duration="36621000" />
       <workItem from="1698326074513" duration="21400000" />
       <workItem from="1698474666505" duration="28434000" />
-      <workItem from="1698718353531" duration="16152000" />
+      <workItem from="1698718353531" duration="41846000" />
     </task>
     <servers />
   </component>
@@ -249,12 +258,28 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/icu/buzz/lox/Lox.java</url>
-          <line>50</line>
-          <option name="timeStamp" value="1" />
+          <url>file://$PROJECT_DIR$/src/main/java/icu/buzz/lox/Interpreter.java</url>
+          <line>57</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/icu/buzz/lox/Interpreter.java</url>
+          <line>176</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/icu/buzz/lox/Resolver.java</url>
+          <line>130</line>
+          <option name="timeStamp" value="13" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="icu.buzz.lox.Environment" memberName="enclose" />
+        <PinnedItemInfo parentTag="icu.buzz.lox.callable.LoxFunction" memberName="closure" />
+      </pinned-members>
+    </pin-to-top-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="this.tokenList.get(current)" language="JAVA" />

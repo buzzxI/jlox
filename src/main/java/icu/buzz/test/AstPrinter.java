@@ -37,6 +37,11 @@ public class AstPrinter implements ExprVisitor<String> {
     }
 
     @Override
+    public String visitExpr(Expr.Set expr) {
+        return null;
+    }
+
+    @Override
     public String visitExpr(Expr.Logical expr) {
         return null;
     }
@@ -68,7 +73,17 @@ public class AstPrinter implements ExprVisitor<String> {
     }
 
     @Override
+    public String visitExpr(Expr.Get expr) {
+        return null;
+    }
+
+    @Override
     public String visitExpr(Expr.Variable expr) {
         return expr.getName().getLexeme();
+    }
+
+    @Override
+    public String visitExpr(Expr.This expr) {
+        return null;
     }
 }

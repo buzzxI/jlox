@@ -34,6 +34,7 @@ public class Parser {
     private Stmt declaration() {
         if (match(TokenType.VAR)) return varDecl();
         if (match(TokenType.FUN)) return funDecl();
+        if (match(TokenType.CLASS)) return classDecl();
         return statement();
     }
 
@@ -48,24 +49,38 @@ public class Parser {
     }
 
     private Stmt funDecl() {
-        Token funName = consume(TokenType.IDENTIFIER, "the name of a function should be an identifier");
-        consume(TokenType.LEFT_PAREN, "a '(' is needed at the beginning of function parameter list");
+        return function("function");
+    }
+
+    private Stmt.Fun function(String type) {
+        Token funName = consume(TokenType.IDENTIFIER, "the name of a " + type + " should be an identifier");
+        consume(TokenType.LEFT_PAREN, "a '(' is needed at the beginning of " + type + " parameter list");
         List<Token> parameters = new ArrayList<>();
         if (!check(TokenType.RIGHT_PAREN)) {
             do {
                 if (parameters.size() >= Lox.MAX_ARGS) {
-                    Lox.errorReport(peek(), "cannot have more than 255 parameters in a function declaration");
+                    Lox.errorReport(peek(), "cannot have more than 255 parameters in a " + type + " declaration");
                 }
                 Token parameter = consume(TokenType.IDENTIFIER, "expect parameter name");
                 parameters.add(parameter);
             } while (match(TokenType.COMMA));
         }
-        consume(TokenType.RIGHT_PAREN, "a ')' is needed at the end of function parameter list");
+        consume(TokenType.RIGHT_PAREN, "a ')' is needed at the end of " + type + " parameter list");
 
         Stmt stmt = statement();
-        if (!(stmt instanceof Stmt.Block body)) throw new ParserError(previous(), "body of a function should be a block");
+        if (!(stmt instanceof Stmt.Block body)) throw new ParserError(previous(), "body of a " + type + " should be a block");
 
         return new Stmt.Fun(funName, parameters, body.getStatements());
+    }
+
+    private Stmt classDecl() {
+        Token className = consume(TokenType.IDENTIFIER, "the name of a class should be an identifier");
+        consume(TokenType.LEFT_BRACE, "a '{' is needed at the beginning of class declaration");
+        List<Stmt.Fun> methods = new ArrayList<>();
+        while (!check(TokenType.RIGHT_BRACE) && !isEnd()) methods.add(function("method"));
+        consume(TokenType.RIGHT_BRACE, "a '}' is needed at the end of class declaration");
+
+        return new Stmt.Class(className, methods);
     }
 
     private Stmt statement() {
@@ -165,8 +180,9 @@ public class Parser {
 
         if (match(TokenType.EQUAL)) {
             Token equalToken = previous();
-            if (expr instanceof Expr.Variable) return new Expr.Assign(((Expr.Variable) expr).getName(), assignment());
-            throw new ParserError(equalToken, "expr for '=' must be an identifier");
+            if (expr instanceof Expr.Variable variable) return new Expr.Assign(variable.getName(), assignment());
+            else if (expr instanceof Expr.Get get) return new Expr.Set(get.getObject(), get.getName(), assignment());
+            throw new ParserError(equalToken, "expect an identifier before '='");
         }
 
         return expr;
@@ -244,9 +260,10 @@ public class Parser {
        while (true) {
            if (match(TokenType.LEFT_PAREN)) {
               expr = finishCall(expr);
-           } else{
-               break;
-           }
+           } else if (match(TokenType.DOT)) {
+               Token name = consume(TokenType.IDENTIFIER, "an identifier is needed after '.'");
+               expr = new Expr.Get(expr, name);
+           } else break;
        }
        return expr;
     }
@@ -267,7 +284,6 @@ public class Parser {
 
     private Expr primary() {
         Token currenToken = advance();
-
         return switch (currenToken.getType()) {
             case FALSE -> new Expr.Literal(false);
             case TRUE -> new Expr.Literal(true);
@@ -279,6 +295,7 @@ public class Parser {
                 yield new Expr.Grouping(expr);
             }
             case IDENTIFIER -> new Expr.Variable(currenToken);
+            case THIS -> new Expr.This(currenToken);
             default -> throw new ParserError(currenToken, "unexpected token '" + currenToken.getLexeme() + "'");
         };
     }

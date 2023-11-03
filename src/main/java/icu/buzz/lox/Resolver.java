@@ -13,15 +13,24 @@ public class Resolver implements ExprVisitor<Void>, StmtVisitor<Void> {
     private enum FunctionType {
         NONE,
         FUNCTION,
+        METHOD,
+        INITIALIZER,
+    }
+
+    private enum ClassType {
+        NONE,
+        CLASS,
     }
 
     private FunctionType currentFunc;
+    private ClassType currentClass;
     private final List<Map<String, Boolean>> scopes;
 
     private final Interpreter interpreter;
 
     public Resolver(Interpreter interpreter) {
         this.currentFunc = FunctionType.NONE;
+        this.currentClass = ClassType.NONE;
         this.scopes = new ArrayList<>();
         this.interpreter = interpreter;
     }
@@ -50,6 +59,13 @@ public class Resolver implements ExprVisitor<Void>, StmtVisitor<Void> {
     public Void visitExpr(Expr.Assign expr) {
         resolve(expr.getValue());
         resolveLocal(expr, expr.getName());
+        return null;
+    }
+
+    @Override
+    public Void visitExpr(Expr.Set expr) {
+        resolve(expr.getObject());
+        resolve(expr.getValue());
         return null;
     }
 
@@ -92,6 +108,12 @@ public class Resolver implements ExprVisitor<Void>, StmtVisitor<Void> {
     }
 
     @Override
+    public Void visitExpr(Expr.Get expr) {
+        resolve(expr.getObject());
+        return null;
+    }
+
+    @Override
     public Void visitExpr(Expr.Variable expr) {
         if (!scopes.isEmpty()) {
             Map<String, Boolean> scope = scopes.get(scopes.size() - 1);
@@ -100,6 +122,13 @@ public class Resolver implements ExprVisitor<Void>, StmtVisitor<Void> {
             }
         }
         resolveLocal(expr, expr.getName());
+        return null;
+    }
+
+    @Override
+    public Void visitExpr(Expr.This expr) {
+        if (currentClass == ClassType.NONE) throw new ResolverError(expr.getKeyword(), "can not use 'this' outside a class");
+        resolveLocal(expr, expr.getKeyword());
         return null;
     }
 
@@ -141,6 +170,20 @@ public class Resolver implements ExprVisitor<Void>, StmtVisitor<Void> {
     }
 
     @Override
+    public Void visitStmt(Stmt.Class stmt) {
+        ClassType encloseType = this.currentClass;
+        this.currentClass = ClassType.CLASS;
+        declare(stmt.getName());
+        define(stmt.getName());
+        beginScope();
+        scopes.get(scopes.size() - 1).put("this", true);
+        stmt.getMethods().forEach(method -> resolveFunc(method, method.getName().getLexeme().equals("init") ? FunctionType.INITIALIZER : FunctionType.METHOD));
+        endScope();
+        this.currentClass = encloseType;
+        return null;
+    }
+
+    @Override
     public Void visitStmt(Stmt.Fun stmt) {
         declare(stmt.getName());
         define(stmt.getName());
@@ -158,7 +201,10 @@ public class Resolver implements ExprVisitor<Void>, StmtVisitor<Void> {
     @Override
     public Void visitStmt(Stmt.Return stmt) {
         if (currentFunc == FunctionType.NONE) throw new ResolverError(stmt.getKeyword(), "can not return from top-level");
-        if (stmt.getValue() != null) resolve(stmt.getValue());
+        if (stmt.getValue() != null) {
+            if (currentFunc == FunctionType.INITIALIZER) throw new ResolverError(stmt.getKeyword(), "can not return value from initializer");
+            resolve(stmt.getValue());
+        }
         return null;
     }
 
@@ -205,7 +251,7 @@ public class Resolver implements ExprVisitor<Void>, StmtVisitor<Void> {
         for (int i = scopes.size() - 1; i >= 0; i--) {
             Map<String, Boolean> scope = scopes.get(i);
             if (scope.containsKey(name.getLexeme())) {
-                interpreter.resolve(expr, scope.size() - 1 - i);
+                interpreter.resolve(expr, scopes.size() - 1 - i);
                 return;
             }
         }

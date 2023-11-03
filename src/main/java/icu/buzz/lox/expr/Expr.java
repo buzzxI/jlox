@@ -32,6 +32,39 @@ public abstract class Expr {
 
     }
 
+    public static class Set extends Expr {
+        private final Expr object;
+
+        private final Token name;
+
+        private final Expr value;
+
+        public Set(Expr object, Token name, Expr value) {
+            this.object = object;
+            this.name = name;
+            this.value = value;
+        }
+
+        @Override
+        public <R> R accept(ExprVisitor<R> visitor) {
+            return visitor.visitExpr(this);
+        }
+
+        // getters
+        public Expr getObject() {
+            return this.object;
+        }
+
+        public Token getName() {
+            return this.name;
+        }
+
+        public Expr getValue() {
+            return this.value;
+        }
+
+    }
+
     public static class Logical extends Expr {
         private final Expr left;
 
@@ -195,6 +228,32 @@ public abstract class Expr {
 
     }
 
+    public static class Get extends Expr {
+        private final Expr object;
+
+        private final Token name;
+
+        public Get(Expr object, Token name) {
+            this.object = object;
+            this.name = name;
+        }
+
+        @Override
+        public <R> R accept(ExprVisitor<R> visitor) {
+            return visitor.visitExpr(this);
+        }
+
+        // getters
+        public Expr getObject() {
+            return this.object;
+        }
+
+        public Token getName() {
+            return this.name;
+        }
+
+    }
+
     public static class Variable extends Expr {
         private final Token name;
 
@@ -210,6 +269,25 @@ public abstract class Expr {
         // getters
         public Token getName() {
             return this.name;
+        }
+
+    }
+
+    public static class This extends Expr {
+        private final Token keyword;
+
+        public This(Token keyword) {
+            this.keyword = keyword;
+        }
+
+        @Override
+        public <R> R accept(ExprVisitor<R> visitor) {
+            return visitor.visitExpr(this);
+        }
+
+        // getters
+        public Token getKeyword() {
+            return this.keyword;
         }
 
     }

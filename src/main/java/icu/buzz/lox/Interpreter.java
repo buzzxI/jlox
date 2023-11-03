@@ -7,6 +7,8 @@ import icu.buzz.lox.exceptions.Return;
 import icu.buzz.lox.expr.Expr;
 import icu.buzz.lox.expr.ExprVisitor;
 import icu.buzz.lox.callable.foreign.Clock;
+import icu.buzz.lox.oop.LoxClass;
+import icu.buzz.lox.oop.LoxInstance;
 import icu.buzz.lox.stmt.Stmt;
 import icu.buzz.lox.stmt.StmtVisitor;
 import icu.buzz.lox.token.Token;
@@ -47,6 +49,15 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
         Integer distance = depthMap.get(expr);
         if (distance == null) global.assign(expr.getName(), value);
         else environment.assign(expr.getName(), value, distance);
+        return value;
+    }
+
+    @Override
+    public Object visitExpr(Expr.Set expr) {
+        Object instance = expr.getObject().accept(this);
+        if (!(instance instanceof LoxInstance loxInstance)) throw new ExecuteError(expr.getName(), "field only allowed for instance");
+        Object value = expr.getValue().accept(this);
+        loxInstance.set(expr.getName(), value);
         return value;
     }
 
@@ -133,7 +144,7 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
         List<Object> arguments = new ArrayList<>(size);
         for (int i = 0; i < size; i++) arguments.add(argLists.get(i).accept(this));
 
-        if (!(callee instanceof LoxCallable function)) throw new ExecuteError(expr.getParen(), "only call functions and classes");
+        if (!(callee instanceof LoxCallable function)) throw new ExecuteError(expr.getParen(), "callee is not callable");
         if (function.arity() != arguments.size()) throw new ExecuteError(expr.getParen(), "function except:" + function.arity()+ " but got:" + arguments.size());
 
         return function.call(this, arguments);
@@ -150,10 +161,26 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
     }
 
     @Override
+    public Object visitExpr(Expr.Get expr) {
+        Object instance = expr.getObject().accept(this);
+        if (!(instance instanceof LoxInstance loxInstance)) throw new ExecuteError(expr.getName(), "property only allowed for an instance");
+        return loxInstance.get(expr.getName());
+    }
+
+    @Override
     public Object visitExpr(Expr.Variable expr) {
+        return loopUp(expr, expr.getName());
+    }
+
+    @Override
+    public Object visitExpr(Expr.This expr) {
+        return loopUp(expr, expr.getKeyword());
+    }
+
+    private Object loopUp(Expr expr, Token name) {
         Integer distance = depthMap.get(expr);
-        if (distance == null) return global.get(expr.getName());
-        else return environment.get(expr.getName(), distance);
+        if (distance == null) return global.get(name);
+        return environment.get(name, distance);
     }
 
     /**
@@ -274,10 +301,19 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitStmt(Stmt.Class stmt) {
+        String className = stmt.getName().getLexeme();
+        Map<String, LoxFunction> methods = new HashMap<>();
+        for (Stmt.Fun method : stmt.getMethods()) methods.put(method.getName().getLexeme(), new LoxFunction(method, environment, method.getName().getLexeme().equals("init")));
+        LoxClass loxClass = new LoxClass(className, methods);
+        environment.define(className, loxClass);
+        return null;
+    }
 
     @Override
     public Void visitStmt(Stmt.Fun stmt) {
-        this.environment.define(stmt.getName().getLexeme(), new LoxFunction(stmt, this.environment));
+        this.environment.define(stmt.getName().getLexeme(), new LoxFunction(stmt, this.environment, false));
         return null;
     }
 

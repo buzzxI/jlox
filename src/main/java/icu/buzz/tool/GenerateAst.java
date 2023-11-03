@@ -15,13 +15,16 @@ public class GenerateAst {
         }
         List<String> expressions = defineAst(args[0], "Expr",
                 Arrays.asList("Assign: Token name, Expr value",
+                        "Set: Expr object, Token name, Expr value",
                         "Logical: Expr left, Token operator, Expr right",
                         "Binary: Expr left, Token operator, Expr right",
                         "Unary: Token operator, Expr right",
                         "Call: Expr callee, List<Expr> arguments, Token paren",
                         "Grouping: Expr expression",
                         "Literal: Object value",
-                        "Variable: Token name"),
+                        "Get: Expr object, Token name",
+                        "Variable: Token name",
+                        "This: Token keyword"),
                 "icu.buzz.lox.token.Token", "java.util.List");
         defineVisitor(args[0], "Expr", expressions);
         List<String> statements = defineAst(args[0], "Stmt",
@@ -30,6 +33,7 @@ public class GenerateAst {
                         "Block: List<Stmt> statements",
                         "If: Expr condition, Stmt thenBranch, Stmt elseBranch",
                         "Var: Token name, Expr initializer",
+                        "Class: Token name, List<Stmt.Fun> methods",
                         "Fun: Token name, List<Token> parameters, List<Stmt> body",
                         "While: Expr condition, Stmt body",
                         "Return: Token keyword, Expr value"),
