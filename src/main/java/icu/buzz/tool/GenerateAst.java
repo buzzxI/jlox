@@ -24,7 +24,8 @@ public class GenerateAst {
                         "Literal: Object value",
                         "Get: Expr object, Token name",
                         "Variable: Token name",
-                        "This: Token keyword"),
+                        "This: Token keyword",
+                        "Super: Token keyword, Token method"),
                 "icu.buzz.lox.token.Token", "java.util.List");
         defineVisitor(args[0], "Expr", expressions);
         List<String> statements = defineAst(args[0], "Stmt",
@@ -33,7 +34,7 @@ public class GenerateAst {
                         "Block: List<Stmt> statements",
                         "If: Expr condition, Stmt thenBranch, Stmt elseBranch",
                         "Var: Token name, Expr initializer",
-                        "Class: Token name, List<Stmt.Fun> methods",
+                        "Class: Token name, Expr.Variable sup, List<Stmt.Fun> methods",
                         "Fun: Token name, List<Token> parameters, List<Stmt> body",
                         "While: Expr condition, Stmt body",
                         "Return: Token keyword, Expr value"),

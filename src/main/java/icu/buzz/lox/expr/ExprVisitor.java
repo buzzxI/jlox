@@ -12,4 +12,5 @@ public interface ExprVisitor<R> {
     R visitExpr (Expr.Get expr);
     R visitExpr (Expr.Variable expr);
     R visitExpr (Expr.This expr);
+    R visitExpr (Expr.Super expr);
 }

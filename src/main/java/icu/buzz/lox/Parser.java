@@ -75,12 +75,19 @@ public class Parser {
 
     private Stmt classDecl() {
         Token className = consume(TokenType.IDENTIFIER, "the name of a class should be an identifier");
+
+        Expr.Variable sup = null;
+        if (match(TokenType.LESS)) {
+            Token parentName = consume(TokenType.IDENTIFIER, "expect parent class name after '<'");
+            sup =new Expr.Variable(parentName);
+        }
+
         consume(TokenType.LEFT_BRACE, "a '{' is needed at the beginning of class declaration");
         List<Stmt.Fun> methods = new ArrayList<>();
         while (!check(TokenType.RIGHT_BRACE) && !isEnd()) methods.add(function("method"));
         consume(TokenType.RIGHT_BRACE, "a '}' is needed at the end of class declaration");
 
-        return new Stmt.Class(className, methods);
+        return new Stmt.Class(className, sup, methods);
     }
 
     private Stmt statement() {
@@ -296,6 +303,11 @@ public class Parser {
             }
             case IDENTIFIER -> new Expr.Variable(currenToken);
             case THIS -> new Expr.This(currenToken);
+            case SUPER -> {
+                consume(TokenType.DOT, "a '.' is needed after 'super'");
+                Token method = consume(TokenType.IDENTIFIER, "expect super class method name");
+                yield new Expr.Super(currenToken, method);
+            }
             default -> throw new ParserError(currenToken, "unexpected token '" + currenToken.getLexeme() + "'");
         };
     }

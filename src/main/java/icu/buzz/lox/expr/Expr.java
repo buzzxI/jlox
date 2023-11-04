@@ -292,4 +292,30 @@ public abstract class Expr {
 
     }
 
+    public static class Super extends Expr {
+        private final Token keyword;
+
+        private final Token method;
+
+        public Super(Token keyword, Token method) {
+            this.keyword = keyword;
+            this.method = method;
+        }
+
+        @Override
+        public <R> R accept(ExprVisitor<R> visitor) {
+            return visitor.visitExpr(this);
+        }
+
+        // getters
+        public Token getKeyword() {
+            return this.keyword;
+        }
+
+        public Token getMethod() {
+            return this.method;
+        }
+
+    }
+
 }

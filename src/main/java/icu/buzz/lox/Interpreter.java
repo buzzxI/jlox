@@ -177,6 +177,16 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
         return loopUp(expr, expr.getKeyword());
     }
 
+    @Override
+    public Object visitExpr(Expr.Super expr) {
+        Integer distance = depthMap.get(expr);
+        LoxClass supClass = (LoxClass) environment.get(expr.getKeyword(), distance);
+        LoxFunction method = supClass.getMethod(expr.getMethod().getLexeme());
+        if (method == null) throw new ExecuteError(expr.getMethod(), "undefined method " + expr.getMethod().getLexeme());
+        LoxInstance instance = (LoxInstance) environment.get("this", distance - 1);
+        return method.bind(instance);
+    }
+
     private Object loopUp(Expr expr, Token name) {
         Integer distance = depthMap.get(expr);
         if (distance == null) return global.get(name);
@@ -303,11 +313,24 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
     @Override
     public Void visitStmt(Stmt.Class stmt) {
-        String className = stmt.getName().getLexeme();
+        LoxClass supClass = null;
+        if (stmt.getSup() != null) {
+            Object sup = stmt.getSup().accept(this);
+            if (!(sup instanceof LoxClass)) throw new ExecuteError(stmt.getSup().getName(), "superclass of a class must be a class");
+            supClass = (LoxClass) sup;
+        }
+        environment.define(stmt.getName().getLexeme(), null);
+        if (supClass != null) {
+            environment = new Environment(environment);
+            environment.define("super", supClass);
+        }
         Map<String, LoxFunction> methods = new HashMap<>();
         for (Stmt.Fun method : stmt.getMethods()) methods.put(method.getName().getLexeme(), new LoxFunction(method, environment, method.getName().getLexeme().equals("init")));
-        LoxClass loxClass = new LoxClass(className, methods);
-        environment.define(className, loxClass);
+
+        if (supClass != null) environment = environment.getEnclose();
+
+        LoxClass loxClass = new LoxClass(stmt.getName().getLexeme(), supClass, methods);
+        environment.assign(stmt.getName(), loxClass);
         return null;
     }
 

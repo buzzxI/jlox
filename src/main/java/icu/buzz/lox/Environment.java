@@ -65,4 +65,8 @@ public class Environment {
         if (distance == 0) this.assign(name, value);
         else if (enclose != null) this.enclose.assign(name, value, distance - 1);
     }
+
+    public Environment getEnclose() {
+        return enclose;
+    }
 }

@@ -20,6 +20,7 @@ public class Resolver implements ExprVisitor<Void>, StmtVisitor<Void> {
     private enum ClassType {
         NONE,
         CLASS,
+        SUBCLASS,
     }
 
     private FunctionType currentFunc;
@@ -133,6 +134,18 @@ public class Resolver implements ExprVisitor<Void>, StmtVisitor<Void> {
     }
 
     @Override
+    public Void visitExpr(Expr.Super expr) {
+        return switch (currentClass) {
+            case NONE -> throw new ResolverError(expr.getMethod(), "can not use 'super' outside a class");
+            case CLASS -> throw new ResolverError(expr.getMethod(), "can not use 'super' inside a class without parent");
+            default -> {
+                resolveLocal(expr, expr.getKeyword());
+                yield null;
+            }
+        };
+    }
+
+    @Override
     public Void visitStmt(Stmt.Expression stmt) {
         resolve(stmt.getExpr());
         return null;
@@ -175,10 +188,19 @@ public class Resolver implements ExprVisitor<Void>, StmtVisitor<Void> {
         this.currentClass = ClassType.CLASS;
         declare(stmt.getName());
         define(stmt.getName());
+        Expr.Variable sup = stmt.getSup();
+        if (sup != null) {
+            this.currentClass = ClassType.SUBCLASS;
+            if (sup.getName().getLexeme().equals(stmt.getName().getLexeme())) throw new ResolverError(sup.getName(), "a class can not inherit itself");
+            resolve(stmt.getSup());
+            beginScope();
+            scopes.get(scopes.size() - 1).put("super", true);
+        }
         beginScope();
         scopes.get(scopes.size() - 1).put("this", true);
         stmt.getMethods().forEach(method -> resolveFunc(method, method.getName().getLexeme().equals("init") ? FunctionType.INITIALIZER : FunctionType.METHOD));
         endScope();
+        if (sup != null) endScope();
         this.currentClass = encloseType;
         return null;
     }

@@ -86,4 +86,9 @@ public class AstPrinter implements ExprVisitor<String> {
     public String visitExpr(Expr.This expr) {
         return null;
     }
+
+    @Override
+    public String visitExpr(Expr.Super expr) {
+        return null;
+    }
 }

@@ -126,10 +126,13 @@ public abstract class Stmt {
     public static class Class extends Stmt {
         private final Token name;
 
+        private final Expr.Variable sup;
+
         private final List<Stmt.Fun> methods;
 
-        public Class(Token name, List<Stmt.Fun> methods) {
+        public Class(Token name, Expr.Variable sup, List<Stmt.Fun> methods) {
             this.name = name;
+            this.sup = sup;
             this.methods = methods;
         }
 
@@ -141,6 +144,10 @@ public abstract class Stmt {
         // getters
         public Token getName() {
             return this.name;
+        }
+
+        public Expr.Variable getSup() {
+            return this.sup;
         }
 
         public List<Stmt.Fun> getMethods() {
